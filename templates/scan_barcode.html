@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Welcome, {{ current_user.username }}</h2>
+<form id="scan-form" method="POST" action="{{ url_for('add_normal_user_data') }}">
+    <input type="text" name="barcode" id="barcode-input" placeholder="Scan barcode" required>
+    <button type="submit">Submit</button>
+</form>
+<div id="feedback-box"></div>
+<button id="next-pallet">Next pallet</button>
+
+<h3>Scan History</h3>
+<table>
+    <thead>
+        <tr>
+            <th>Serial Number</th>
+            <th>Barcode</th>
+            <th>Delete?</th>
+        </tr>
+    </thead>
+    <tbody id="scan-history">
+        {% for scan in scans %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ scan.barcode }}</td>
+            <td><button data-id="{{ scan.id }}" class="delete-button">Delete</button></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('view_scans') }}">Check history</a>
+
+<script>
+document.getElementById('scan-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const barcodeInput = document.getElementById('barcode-input');
+    const barcode = barcodeInput.value;
+    
+    fetch('{{ url_for("add_normal_user_data") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            barcode: barcode,
+            pallet_number: 'current_pallet'  // Add your logic to get the current pallet number
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'duplicate') {
+            document.getElementById('feedback-box').innerText = data.message;
+        } else {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td>${document.querySelectorAll('#scan-history tr').length + 1}</td>
+                <td>${barcode}</td>
+                <td><button data-id="${data.id}" class="delete-button">Delete</button></td>
+            `;
+            document.getElementById('scan-history').appendChild(newRow);
+            barcodeInput.value = '';
+        }
+    });
+});
+
+document.getElementById('next-pallet').addEventListener('click', function() {
+    // Logic to print label and increment pallet number
+    fetch('{{ url_for("normal_user_print_label") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            part_number: 'part_number_placeholder',  // Add your logic to get the part number
+            printer_name: 'YOUR_PRINTER_NAME'  // Add your logic to get the printer name
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('scan-history').innerHTML = '';  // Clear the scan history
+        // Update the feedback box with the running total and other details
+        document.getElementById('feedback-box').innerText = `Pallet submitted. Running total: ...`;  // Add your logic here
+    });
+});
+
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-button')) {
+        const scanId = event.target.getAttribute('data-id');
+        fetch(`/delete_scan/${scanId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                event.target.parentElement.parentElement.remove();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

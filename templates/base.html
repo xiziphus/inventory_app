@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="{{ url_for('dashboard') }}">Dashboard</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                {% if current_user.role == 'Admin' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_users') }}">Manage Users</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('manage_printers') }}">Manage Printers</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('backup') }}">Backup & Reset</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('modify_data') }}">Modify Data</a></li>
+                {% elif current_user.role == 'Normal' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('scan_barcode') }}">Scan Barcode</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('edit_scans') }}">Edit Scans</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('next_pallet') }}">Next Pallet</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('print_label') }}">Print Label</a></li>
+                {% elif current_user.role == 'DSU' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('handle_duplicates') }}">Scan & Handle Duplicates</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('edit_delete_data') }}">Edit/Delete Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('dsu_print_label') }}">Print Label</a></li>
+                {% elif current_user.role == 'RM+WIP' %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('form_data_entry') }}">Form Data Entry</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('validate_duplicates') }}">Validate Duplicates</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('submit_data') }}">Submit Data</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('rm_print_label') }}">Print Label</a></li>
+                {% endif %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

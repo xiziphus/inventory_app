@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Manage Users</h1>
+<form method="post" action="{{ url_for('manage_users') }}">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" name="role" class="form-control" required>
+            <option value="Normal">Normal</option>
+            <option value="DSU">DSU</option>
+            <option value="RM+WIP">RM+WIP</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Add User</button>
+</form>
+<hr>
+<ul class="list-group">
+    {% for user in users %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ user.username }} ({{ user.role }})
+        <form method="post" action="{{ url_for('delete_user', id=user.id) }}" class="mb-0">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+        <form method="post" action="{{ url_for('reset_password', id=user.id) }}" class="mb-0">
+            <input type="password" name="password" placeholder="New Password" required>
+            <button type="submit" class="btn btn-warning btn-sm">Reset Password</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

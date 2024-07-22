@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}RM Print Label{% endblock %}
+
+{% block content %}
+<h1>RM Print Label</h1>
+<form method="post" action="{{ url_for('rm_scanner_print_label') }}">
+    <input type="text" name="part_number" placeholder="Enter part number" required>
+    <input type="text" name="printer_name" placeholder="Enter printer name (optional)">
+    <button type="submit">Print</button>
+</form>
+{% endblock %}

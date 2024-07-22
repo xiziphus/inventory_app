@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+    <h1 class="display-4">Welcome to the Inventory Management System</h1>
+    <p class="lead">This is a simple and efficient system for managing inventory.</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}" role="button">Login</a>
+</div>
+{% endblock %}

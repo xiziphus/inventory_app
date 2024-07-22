@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Form Data Entry{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Form Data Entry</h1>
+<form method="post" action="{{ url_for('add_rm_scanner_user_data') }}">
+    <div class="form-group">
+        <label for="bobbin_number">Bobbin Number</label>
+        <input type="text" id="bobbin_number" name="bobbin_number" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="bobbin_type">Bobbin Type</label>
+        <div>
+            <input type="radio" id="metal" name="bobbin_type" value="Metal" required>
+            <label for="metal">Metal</label>
+            <input type="radio" id="plastic" name="bobbin_type" value="Plastic" required>
+            <label for="plastic">Plastic</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="bobbin_size">Bobbin Size</label>
+        <div>
+            <input type="radio" id="size1" name="bobbin_size" value="400 mm" required>
+            <label for="size1">400 mm</label>
+            <input type="radio" id="size2" name="bobbin_size" value="630 mm" required>
+            <label for="size2">630 mm</label>
+            <input type="radio" id="size3" name="bobbin_size" value="500 mm" required>
+            <label for="size3">500 mm</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="cu_size">Cu Size</label>
+        <input type="text" id="cu_size" name="cu_size" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="drawn_bunched">Copper Type</label>
+        <div>
+            <input type="radio" id="drawn" name="drawn_bunched" value="Drawn" required>
+            <label for="drawn">Drawn</label>
+            <input type="radio" id="bunched" name="drawn_bunched" value="Bunched" required>
+            <label for="bunched">Bunched</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="weight_kg">Weight in KG</label>
+        <input type="text" id="weight_kg" name="weight_kg" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

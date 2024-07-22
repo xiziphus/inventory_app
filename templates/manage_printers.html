@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Printers{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Manage Printers</h1>
+<form method="post" action="{{ url_for('manage_printers') }}">
+    <div class="form-group">
+        <label for="name">Printer Name</label>
+        <input type="text" id="name" name="name" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Printer</button>
+</form>
+<hr>
+<h2 class="mt-4">Assign Printers</h2>
+<ul class="list-group">
+    {% for printer in printers %}
+    <li class="list-group-item">
+        {{ printer.name }}
+        <form method="post" action="{{ url_for('assign_printer') }}" class="form-inline mt-2">
+            <div class="form-group">
+                <select name="user_id" class="form-control mr-2">
+                    {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <input type="hidden" name="printer_id" value="{{ printer.id }}">
+            <button type="submit" class="btn btn-primary">Assign</button>
+        </form>
+        <ul class="mt-2">
+            {% for user in printer.users %}
+            <li>{{ user.username }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

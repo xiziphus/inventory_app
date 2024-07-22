@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Print Label{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Print Label</h1>
+<form method="post" action="{{ url_for('normal_user_print_label') }}">
+    <div class="form-group">
+        <label for="part_number">Part Number</label>
+        <input type="text" id="part_number" name="part_number" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="printer_name">Printer Name (Optional)</label>
+        <input type="text" id="printer_name" name="printer_name" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">Print</button>
+</form>
+{% endblock %}
